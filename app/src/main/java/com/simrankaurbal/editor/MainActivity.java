@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.R.menu.*;
 import android.R.drawable;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,7 +57,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         ListView listView = (ListView) findViewById(R.id.listview);
-        notes.add("Testing");
+        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.simrankaurbal.editor", Context.MODE_PRIVATE);
+
+        HashSet<String> set = (HashSet<String>) sharedPreferences.getStringSet("notes",null);
+
+        // if the set is null
+        if (set == null)
+        {
+            notes.add("Testing");
+
+        }
+        else {
+            notes = new ArrayList<>(set);
+        }
+
         arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,notes);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -82,6 +98,12 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         notes.remove(position);
                         arrayAdapter.notifyDataSetChanged();
+
+                        // shared preferences to delete data permanently -- same method could be used, one used in memorable places-- but here trying new method using strings
+                        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.simrankaurbal.editor", Context.MODE_PRIVATE);
+                        HashSet<String> set = new HashSet<>(MainActivity.notes); // string created from array list
+                        sharedPreferences.edit().putStringSet("notes",set).apply(); // saving in shared preferences
+
                     }
                 }).setNegativeButton("No",null)
                         .show();

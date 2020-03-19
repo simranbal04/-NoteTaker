@@ -1,12 +1,16 @@
 package com.simrankaurbal.editor;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.HashSet;
 
 public class Note extends AppCompatActivity {
 
@@ -51,6 +55,14 @@ public class Note extends AppCompatActivity {
                 MainActivity.notes.set(noteid,String.valueOf(s));
                  // update listview
                 MainActivity.arrayAdapter.notifyDataSetChanged();
+
+                // as here we are saving new entry so we have used permanent storage
+                // shared preferences to save data permanently -- same method could be used, one used in memorable places-- but here trying new method using strings
+                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("com.simrankaurbal.editor", Context.MODE_PRIVATE);
+                HashSet<String> set = new HashSet<>(MainActivity.notes); // string created from array list
+                sharedPreferences.edit().putStringSet("notes",set).apply(); // saving in shared preferences
+
+
 
             }
 
