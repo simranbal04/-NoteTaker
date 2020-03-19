@@ -13,7 +13,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    ArrayList<String> notes = new ArrayList<>();
+    static ArrayList<String> notes = new ArrayList<>();
+    static  ArrayAdapter arrayAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,32 +23,16 @@ public class MainActivity extends AppCompatActivity {
 
         ListView listView = (ListView) findViewById(R.id.listview);
         notes.add("Testing");
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,notes);
+        arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,notes);
         listView.setAdapter(arrayAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                Intent i = new Intent(getApplicationContext(),Note.class);
-                i.putExtra("noteid",position);
-                startActivity(i);
+                Intent intent = new Intent(getApplicationContext(),Note.class);
+                intent.putExtra("noteid",position);
+                startActivity(intent);
             }
         });
-
-
-        // feature when user taps on the item in listview it goes to new activity
-
-//        listView.setOnClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                Intent intent = new Intent(getApplicationContext(),Note.class);
-//                intent.putExtra("noteid",position);
-//                startActivity(intent);
-//
-//
-//            }
-//        });
-
     }
 }
