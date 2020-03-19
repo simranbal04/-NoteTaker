@@ -1,8 +1,10 @@
 package com.simrankaurbal.editor;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +16,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.R.layout;
 import android.R.menu.*;
-
+import android.R.drawable;
 
 import java.util.ArrayList;
 
@@ -62,6 +64,29 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(),Note.class);
                 intent.putExtra("noteid",position);
                 startActivity(intent);
+            }
+        });
+
+        // for deleting the selected note
+        listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                // alert dialog for user to confirm about deleting the note
+                new AlertDialog.Builder(MainActivity.this)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle("Are You Sure?")
+                        .setMessage("Do You Want To Delete This Now?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        notes.remove(position);
+                        arrayAdapter.notifyDataSetChanged();
+                    }
+                }).setNegativeButton("No",null)
+                        .show();
+
+                return true;
             }
         });
     }
