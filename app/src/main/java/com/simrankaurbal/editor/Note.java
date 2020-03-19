@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class Note extends AppCompatActivity {
 
+    int noteid;
+
     @Override
     protected void onCreate(Bundle savedInstatnceState)
     {
@@ -20,11 +22,19 @@ public class Note extends AppCompatActivity {
         // retrieve data
         Intent intent = getIntent();
         // int created for getting data nd default value given if invalid value is passed
-        final int noteid = intent.getIntExtra("noteid",-1);
+        noteid = intent.getIntExtra("noteid",-1);
 
         if (noteid != -1)
         {
             editText.setText(MainActivity.notes.get(noteid));
+
+        }
+        else {
+
+            MainActivity.notes.add(""); // empty note as initally it will empty
+            // note id to access it
+            noteid = MainActivity.notes.size() -1;
+            MainActivity.arrayAdapter.notifyDataSetChanged(); // update the array adapter to display in the listview
 
         }
 
